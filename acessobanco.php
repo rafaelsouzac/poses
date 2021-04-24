@@ -14,30 +14,52 @@ e DELETE, retorna o numero de linhas afetadas.
 Autor código: Rafael de Souza Corrêa
 Data da criação: fev. 2019
 
-Autor do Refactory: 
-Data da Revisão:
+Autor do Refactory: Rafael de Souza Corrêa
+Data da Revisão: Abr. 2021
 O que foi executado:
 
 1) Gerou a documentação incial do código.
-1) Análise e se necessário alteração do padrão do código.
-2) Análise da lógica e o que pode ser alterado para diminuir o tamanho do código.
-3) Quais blocos de códigos podem tornar-se outras funções.
-4) Testar as entradas e saídas, garantindo o tipo de informação que será manipulada.
+2) Análise e se necessário alteração do padrão do código.
+    
+    Alteração das variáveis que contém as informações de acesso ao SGDB
+    para constantes. Visto que INFORMAÇÕES que não modificam-se ao longo
+    do código não devem ser escritas em variáveis, e sim em CONSTANTES.
+
+    Retirada a variável $arrResultado, estava declarada, mas não utilizada.
+
+    Alteração da variável $strRetorno para $strintRetorno, visto que pode
+    ser atribuido tanto uma string quanto um integer.
+
+3) Análise da lógica e o que pode ser alterado para diminuir o tamanho do código.
+4) Quais blocos de códigos podem tornar-se outras funções.
+5) Testar as entradas e saídas, garantindo o tipo de informação que será manipulada.
 
 */
 
 function ConexaoBanco($strParamQuery)
 {
-    $strServidor = (string)"localhost";
-    $strUsuario = (string)"root";
-    $strSenha = (string)"";
-    $strBanco = (string)"gastronomia";
-    $strQuery = (string)$strParamQuery;
-    //$strResultado = "";
-    $arrResultado = array();
+
+    define("strSERVIDOR", "localhost");
+    define("strUSUARIO", "root");    
+    define("strSENHA", "strS3nh453cr3t4"); 
+    //alterar para senha do servidor de produção quando hospedado.
+    define("strBASE", "gastronomia"); 
+
+    //Eliminei esta variável pelo fato de estar em excesso,
+    //não há sentido em ter dois locais com a mesma informação.
+    //fiz o casting na própria variável.
+    $strParamQuery = (string)$strParamQuery;
+
+    //alterei o nome da variável para que o prefixo indique os tipos de
+    //dados que podem ser atribuidos a ela. VIVA a tipação dinâmica.
+    $strintResultado = "";
+
+    //declaração formal da variável $strConexao;
+    $strConexao = "";
+
     $intVerificaQuery = 0;
     
-    $strConexao = mysqli_connect($strServidor, $strUsuario, $strSenha, $strBanco, 3307);
+    $strConexao = mysqli_connect(strSERVIDOR, strUSUARIO, strSENHA, strBASE, 3306);
     
     $strParamQuery = strtolower($strParamQuery);
         
@@ -46,15 +68,15 @@ function ConexaoBanco($strParamQuery)
         $intVerificaQuery = substr_count($strParamQuery, "select");
         if($intVerificaQuery > 0)
         {
-            $strResultado = mysqli_query($strConexao,$strQuery);
-            return $strResultado;
+            $strintResultado = mysqli_query($strConexao,$strParamQuery);
+            return $strintResultado;
         }
         else
         {
-            $strResultado = mysqli_query($strConexao,$strQuery);
-            //trocar pelo numero de linhas afetadas
-            $strResultado = mysqli_affected_rows($strConexao);
-            return $strResultado;
+            $strintResultado = mysqli_query($strConexao,$strParamQuery);
+            //substituido pelo numero de linhas afetadas
+            $strintResultado = mysqli_affected_rows($strConexao);
+            return $strintResultado;
         }
     }
     else
