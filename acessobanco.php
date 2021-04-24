@@ -31,7 +31,15 @@ O que foi executado:
     ser atribuido tanto uma string quanto um integer.
 
 3) Análise da lógica e o que pode ser alterado para diminuir o tamanho do código.
+
+    substituição da função substr_count, que é case sensitive pela
+    stripos que é case INSENSITIVE, com isso posso eliminar a linha que 
+    transforma a query toda em minúsculo.
+
 4) Quais blocos de códigos podem tornar-se outras funções.
+
+    Não se aplica neste caso.
+
 5) Testar as entradas e saídas, garantindo o tipo de informação que será manipulada.
 
 */
@@ -58,14 +66,13 @@ function ConexaoBanco($strParamQuery)
     $strConexao = "";
 
     $intVerificaQuery = 0;
-    
+
     $strConexao = mysqli_connect(strSERVIDOR, strUSUARIO, strSENHA, strBASE, 3306);
-    
-    $strParamQuery = strtolower($strParamQuery);
-        
+
     if($strConexao)
     {
-        $intVerificaQuery = substr_count($strParamQuery, "select");
+        $intVerificaQuery = stripos($strParamQuery, "select");
+
         if($intVerificaQuery > 0)
         {
             $strintResultado = mysqli_query($strConexao,$strParamQuery);
