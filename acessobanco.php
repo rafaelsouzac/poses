@@ -42,6 +42,10 @@ O que foi executado:
 
 5) Testar as entradas e saídas, garantindo o tipo de informação que será manipulada.
 
+    Não se aplica neste caso, visto que as funções mysqli já retornam os valores de
+    erros caso o programador envie querys de forma inapropriada. Cabendo ao DBA do
+    SGDB a verificação e acessos a base de dados.
+    
 */
 
 function ConexaoBanco($strParamQuery)
